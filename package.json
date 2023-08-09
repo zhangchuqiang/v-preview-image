@@ -1,7 +1,7 @@
 {
   "name": "v-preview-image",
   "private": false,
-  "version": "3.0.0",
+  "version": "3.0.1",
   "desription": "基于vue2/vue3的图片预览插件",
   "keywords": [
     "vue",
@@ -26,9 +26,6 @@
     "build": "vue-tsc && vite build",
     "preview": "vite preview"
   },
-  "dependencies": {
-    "vue": "^3.3.4"
-  },
   "devDependencies": {
     "@types/node": "^20.4.8",
     "@vitejs/plugin-vue": "^4.2.3",
@@ -38,6 +35,7 @@
     "vite": "^4.4.5",
     "vite-plugin-css-injected-by-js": "^3.3.0",
     "vite-plugin-dts": "^3.5.1",
+    "vue": "^3.3.4",
     "vue-tsc": "^1.8.5"
   }
 }
