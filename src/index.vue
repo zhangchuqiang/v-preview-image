@@ -1,169 +1,3 @@
-<script lang="ts" setup>
-import { reactive, toRefs, watch } from 'vue'
-import { PreviewState } from './types'
-
-const state = reactive<PreviewState>({
-  defaultOptions: {
-    enabledMaskClose: true, // 开启点击遮罩关闭
-    enabledEscClose: true, // 开启esc按键关闭
-    enabledMouseZoom: true, // 开启鼠标滚轮缩放
-    activeColor: 'rgba(239, 84, 78, 0.7)' // 预览图中选中图片的背景颜色
-  }, // 默认配置
-  show: false, // 是否显示预览
-  currentImg: '', // 当前预览图片的url
-  currentIndex: 0, //当前预览图片的索引
-  imgList: [], // 需要预览的图片数组
-  imgKey: '', // 图片所在的数据的key
-  imgTop: 0, // 图片定位置top
-  imgLeft: 0, // 图片定位置left
-  startPageX: 0, // 按下鼠标时当前鼠标所在位置x
-  startPageY: 0, // 按下鼠标时当前鼠标所在位置y
-  imgScale: 1, // 图片缩放
-  imgRotate: 0 // 图片旋转
-})
-
-// 旋转
-const handleRotate = (type: string) => {
-  if (type === 'left') {
-    state.imgRotate -= 90
-  } else {
-    state.imgRotate += 90
-  }
-}
-// 切换上一张或者下一张
-const handleCut = (type: 'last' | 'next') => {
-  if (state.imgList.length < 2) return
-  // const currentIndex = this.imgList.findIndex(item => {
-  //   const url = this.imgKey ? item[this.imgKey] : item
-  //   return url === this.currentImg
-  // })
-  let targetIndex = 0
-  if (type === 'last') {
-    if (state.currentIndex === 0) {
-      targetIndex = state.imgList.length - 1
-    } else {
-      targetIndex = state.currentIndex - 1
-    }
-  }
-  if (type === 'next') {
-    if (state.currentIndex === state.imgList.length - 1) {
-      targetIndex = 0
-    } else {
-      targetIndex = state.currentIndex + 1
-    }
-  }
-  const targetItem = state.imgList[targetIndex]
-  state.currentImg = state.imgKey ? targetItem[state.imgKey] : targetItem
-  state.currentIndex = targetIndex
-  handleXScroll(targetIndex)
-}
-// 使滚动条滚动到当前预览的那一张
-const handleXScroll = (index: number) => {
-  index = index < 4 ? 0 : index - 4
-  const imgParentElement = document.querySelector('.preview-footer-thumbs') as HTMLElement
-  const imgWrapElement = document.querySelector('#thumb-item-' + index) as HTMLElement
-  imgParentElement.scrollLeft = imgWrapElement?.offsetLeft || 0
-}
-// 点击缩略图切换当前预览
-const handleClickThumb = (item: any, index: number) => {
-  const url = state.imgKey ? item[state.imgKey] : item
-  state.currentImg = url
-  state.currentIndex = index
-  handleXScroll(index)
-}
-// 点击遮罩
-const handleClickMask = () => {
-  if (state.defaultOptions.enabledMaskClose) {
-    state.show = false
-  }
-}
-// 鼠标滚轮缩放图片
-const handerMousewheel = (e: any) => {
-  if (!state.defaultOptions.enabledMouseZoom) return
-
-  // 火狐浏览器为e.detail 其他浏览器均为e.wheelDelta
-  if (e.wheelDelta > 0 || e.detail > 0) {
-    handleScale('add')
-  } else if (e.wheelDelta < 0 || e.detail < 0) {
-    handleScale('reduce')
-  }
-}
-// 缩放 1:加 2:减
-const handleScale = (type: 'add' | 'reduce') => {
-  if (type === 'add' && state.imgScale < 4) {
-    state.imgScale += 0.1
-  } else if (type === 'reduce' && state.imgScale > 0.5) {
-    state.imgScale -= 0.1
-  }
-}
-// 按下鼠标开始移动图片
-const handleMoveStart = (e: any) => {
-  const { pageX, pageY } = e
-  state.startPageX = pageX - state.imgLeft
-  state.startPageY = pageY - state.imgTop
-  document.addEventListener('mousemove', handleMore, false)
-  document.addEventListener('mouseup', clearEvent, false)
-  e.preventDefault()
-}
-// 键盘按下
-const listenerKeydown = (e: any) => {
-  if (e.keyCode === 27 && state.defaultOptions.enabledEscClose) {
-    state.show = false
-  }
-}
-// 移除事件
-const clearEvent = () => {
-  document.removeEventListener('mousemove', handleMore, false)
-}
-// 按住鼠标移动时的处理
-const handleMore = (e: any) => {
-  const { pageX, pageY } = e
-  state.imgTop = pageY - state.startPageY
-  state.imgLeft = pageX - state.startPageX
-  preventDefault(e)
-}
-// 阻止默认行为
-const preventDefault = (e: any) => {
-  e.preventDefault()
-}
-// 关闭时重置值
-const reset = () => {
-  state.imgList = []
-  state.currentImg = ''
-  state.currentIndex = 0
-  state.imgKey = ''
-  state.imgTop = 0
-  state.imgLeft = 0
-  state.startPageX = 0
-  state.startPageY = 0
-  state.imgScale = 1
-  state.imgRotate = 0
-}
-
-watch(
-  () => state.show,
-  (v) => {
-    if (v) {
-      document.body.style.overflow = 'hidden'
-      document.addEventListener('mousemove', preventDefault, false)
-      document.addEventListener('keydown', listenerKeydown, false)
-    } else {
-      document.body.style.overflow = ''
-      document.removeEventListener('mousemove', preventDefault, false)
-      document.removeEventListener('mouseup', clearEvent, false)
-      document.removeEventListener('keydown', listenerKeydown, false)
-      reset()
-    }
-  },
-  { immediate: true }
-)
-
-const { defaultOptions, show, currentImg, currentIndex, imgList, imgKey, imgTop, imgLeft, imgScale, imgRotate } = toRefs(state)
-
-defineExpose({
-  state
-})
-</script>
 <template>
   <div v-if="show" class="preview-wrap" @mousewheel="handerMousewheel">
     <div class="preview" @click="handleClickMask">
@@ -203,6 +37,176 @@ defineExpose({
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      defaultOptions: {
+        enabledMaskClose: true, // 开启点击遮罩关闭
+        enabledEscClose: true, // 开启esc按键关闭
+        enabledMouseZoom: true, // 开启鼠标滚轮缩放
+        activeColor: 'rgba(239, 84, 78, 0.7)' // 预览图中选中图片的背景颜色
+      }, // 默认配置
+      show: false, // 是否显示预览
+      currentImg: '', // 当前预览图片的url
+      currentIndex: 0, //当前预览图片的索引
+      imgList: [], // 需要预览的图片数组
+      imgKey: '', // 图片所在的数据的key
+      imgTop: 0, // 图片定位置top
+      imgLeft: 0, // 图片定位置left
+      startPageX: 0, // 按下鼠标时当前鼠标所在位置x
+      startPageY: 0, // 按下鼠标时当前鼠标所在位置y
+      imgScale: 1, // 图片缩放
+      imgRotate: 0 // 图片旋转
+    }
+  },
+  watch: {
+    show: {
+      handler(v) {
+        if (v) {
+          document.body.style.overflow = 'hidden'
+          document.addEventListener('mousemove', this.preventDefault, false)
+          document.addEventListener('keydown', this.listenerKeydown, false)
+        } else {
+          document.body.style.overflow = ''
+          document.removeEventListener('mousemove', this.preventDefault, false)
+          document.removeEventListener('mouseup', this.clearEvent, false)
+          document.removeEventListener('keydown', this.listenerKeydown, false)
+          this.reset()
+        }
+      },
+      immediate: true
+    },
+    currentIndex() {
+      this.imgTop = 0
+      this.imgLeft = 0
+      this.imgScale = 1
+      this.imgRotate = 0
+    }
+  },
+  methods: {
+    // 关闭时重置值
+    reset() {
+      this.imgList = []
+      this.currentImg = ''
+      this.currentIndex = 0
+      this.imgKey = ''
+      this.imgTop = 0
+      this.imgLeft = 0
+      this.startPageX = 0
+      this.startPageY = 0
+      this.imgScale = 1
+      this.imgRotate = 0
+    },
+    // 旋转
+    handleRotate(type) {
+      if (type === 'left') {
+        this.imgRotate -= 90
+      } else {
+        this.imgRotate += 90
+      }
+    },
+    // 切换上一张或者下一张
+    handleCut(type) {
+      if (this.imgList.length < 2) return
+      // const currentIndex = this.imgList.findIndex(item => {
+      //   const url = this.imgKey ? item[this.imgKey] : item
+      //   return url === this.currentImg
+      // })
+      let targetIndex = null
+      if (type === 'last') {
+        if (this.currentIndex === 0) {
+          targetIndex = this.imgList.length - 1
+        } else {
+          targetIndex = this.currentIndex - 1
+        }
+      }
+      if (type === 'next') {
+        if (this.currentIndex === this.imgList.length - 1) {
+          targetIndex = 0
+        } else {
+          targetIndex = this.currentIndex + 1
+        }
+      }
+      const targetItem = this.imgList[targetIndex]
+      this.currentImg = this.imgKey ? targetItem[this.imgKey] : targetItem
+      this.currentIndex = targetIndex
+      this.handleXScroll(targetIndex)
+    },
+    // 使滚动条滚动到当前预览的那一张
+    handleXScroll(index) {
+      index = index < 4 ? 0 : index - 4
+      const imgParentElement = document.querySelector('.preview-footer-thumbs')
+      const imgWrapElement = document.querySelector('#thumb-item-' + index)
+      imgParentElement.scrollLeft = imgWrapElement.offsetLeft
+    },
+    // 点击缩略图切换当前预览
+    handleClickThumb(item, index) {
+      const url = this.imgKey ? item[this.imgKey] : item
+      this.currentImg = url
+      this.currentIndex = index
+      this.handleXScroll(index)
+    },
+    // 点击遮罩
+    handleClickMask() {
+      if (this.defaultOptions.enabledMaskClose) {
+        this.show = false
+      }
+    },
+    // 鼠标滚轮缩放图片
+    handerMousewheel(e) {
+      if (!this.defaultOptions.enabledMouseZoom) return
+
+      // 火狐浏览器为e.detail 其他浏览器均为e.wheelDelta
+      if (e.wheelDelta > 0 || e.detail > 0) {
+        this.handleScale('add')
+      } else if (e.wheelDelta < 0 || e.detail < 0) {
+        this.handleScale('reduce')
+      }
+    },
+    // 缩放 add:加 reduce:减
+    handleScale() {
+      if (type === 'add' && this.imgScale < 4) {
+        this.imgScale += 0.1
+      } else if (type === 'reduce' && this.imgScale > 0.5) {
+        this.imgScale -= 0.1
+      }
+    },
+    // 按下鼠标开始移动图片
+    handleMoveStart(e) {
+      const { pageX, pageY } = e
+      this.startPageX = pageX - this.imgLeft
+      this.startPageY = pageY - this.imgTop
+      document.addEventListener('mousemove', this.handleMore, false)
+      document.addEventListener('mouseup', this.clearEvent, false)
+      e.preventDefault()
+    },
+    // 键盘按下
+    listenerKeydown(e) {
+      if (e.keyCode === 27 && this.defaultOptions.enabledEscClose) {
+        this.show = false
+      }
+    },
+    // 移除事件
+    clearEvent() {
+      document.removeEventListener('mousemove', this.handleMore, false)
+    },
+    // 按住鼠标移动时的处理
+    handleMore(e) {
+      const { pageX, pageY } = e
+      this.imgTop = pageY - this.startPageY
+      this.imgLeft = pageX - this.startPageX
+      e.preventDefault()
+    },
+    // 阻止默认行为
+    preventDefault(e) {
+      e.preventDefault()
+    }
+  }
+}
+</script>
+
 <style lang="less" scoped>
 .preview-wrap {
   position: fixed;
@@ -255,13 +259,17 @@ defineExpose({
             width: 30px;
             height: 30px;
           }
+          &:hover {
+            i {
+              color: #ef544e;
+            }
+          }
         }
       }
 
       &-thumbs {
         margin-top: 20px;
         max-width: 700px;
-        padding-bottom: 10px;
         overflow-x: auto;
         white-space: nowrap;
 

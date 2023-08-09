@@ -6,12 +6,10 @@
     <button @click="$preview(url)">也可以只传入url，单张图片预览</button><br /><br />
     <button @click="$preview(0, list2, 'url')">如果数组的item是对象的话，则第三个参数要指定图片在对象中的key</button><br /><br />
     <button @click="handleClick">也可通过实例调用</button><br /><br />
-    <button @click="handleClick2">使用setup组合式api时引入方法调用</button><br /><br />
   </div>
 </template>
 
-<script lang="ts">
-import { preview, setPreviewDefaultOptions } from '../src/index' // 使用setup组合式api时引入方法调用
+<script>
 export default {
   data() {
     return {
@@ -37,23 +35,12 @@ export default {
   methods: {
     handleClick() {
       this.$preview(0, this.list)
-    }
-  },
-  setup() {
-    // 修改默认配置
-    setPreviewDefaultOptions({
-      enabledEscClose: false
-    })
-    const handleClick2 = () => {
-      let url = 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg'
-      // 使用setup组合式api时引入方法调用
-      preview(url)
-    }
-    return {
-      handleClick2
+
+      setTimeout(() => {
+        // 调用关闭方法
+        this.$preview.close()
+      }, 2000)
     }
   }
 }
 </script>
-
-<style lang="scss" scoped></style>

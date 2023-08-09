@@ -1,7 +1,7 @@
 {
   "name": "v-preview-image",
   "private": false,
-  "version": "3.0.1",
+  "version": "2.0.0",
   "desription": "基于vue2/vue3的图片预览插件",
   "keywords": [
     "vue",
@@ -14,28 +14,24 @@
   ],
   "homepage": "https://github.com/zhangchuqiang/v-preview-image",
   "author": "zhangchuqiang",
-  "main": "dist/v-preview-image.js",
+  "main": "dist/v-preview-image.es.js",
   "files": [
     "dist",
     "LICENSE"
   ],
-  "types": "dist/v-preview-image.d.ts",
-  "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@types/node": "^20.4.8",
-    "@vitejs/plugin-vue": "^4.2.3",
+    "install": "^0.13.0",
     "less": "^4.2.0",
     "less-loader": "^11.1.3",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5",
+    "vite": "^2.8.0",
     "vite-plugin-css-injected-by-js": "^3.3.0",
-    "vite-plugin-dts": "^3.5.1",
-    "vue": "^3.3.4",
-    "vue-tsc": "^1.8.5"
+    "vite-plugin-vue2": "1.9.3",
+    "vue": "2.x",
+    "vue-template-compiler": "2.x"
   }
 }
