@@ -60,6 +60,10 @@ export function preview(current: string | number = '', list: any[] = [], key = '
   state.show = true
 }
 
+preview.close = ()=>{
+  closePreview()
+}
+
 /**
  * 关闭预览
  */

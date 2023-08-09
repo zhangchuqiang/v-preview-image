@@ -9,9 +9,25 @@ export declare function closePreview(): void;
  * 默认配置
  */
 declare interface DefaultOptions {
+    /**
+     * 开启点击遮罩关闭
+     * 默认true
+     */
     enabledMaskClose: boolean;
+    /**
+     * 开启esc按键关闭
+     * 默认true
+     */
     enabledEscClose: boolean;
+    /**
+     * 开启鼠标滚轮缩放
+     * 默认true
+     */
     enabledMouseZoom: boolean;
+    /**
+     * 预览图中选中图片的背景颜色
+     * 默认rgba(239, 84, 78, 0.7)
+     */
     activeColor: string;
 }
 
@@ -30,9 +46,13 @@ export default install;
  */
 export declare function preview(current?: string | number, list?: any[], key?: string): void;
 
+export declare namespace preview {
+    var close: () => void;
+}
+
 /**
  * 设置预览默认配置
  */
-export declare function setPreviewDefaultOptions(options: DefaultOptions): void;
+export declare function setPreviewDefaultOptions(options: Partial<DefaultOptions>): void;
 
 export { }

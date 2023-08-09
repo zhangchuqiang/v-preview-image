@@ -88,7 +88,7 @@ const handerMousewheel = (e: any) => {
     handleScale('reduce')
   }
 }
-// 缩放 1:加 2:减
+// 缩放 type=add:加 reduce:减
 const handleScale = (type: 'add' | 'reduce') => {
   if (type === 'add' && state.imgScale < 4) {
     state.imgScale += 0.1

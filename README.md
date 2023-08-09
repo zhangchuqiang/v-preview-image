@@ -11,7 +11,11 @@
 
 如果对您有帮助，麻烦给个Star！
 
-[github]: https://github.com/zhangchuqiang/v-preview-image
+[github](https://github.com/zhangchuqiang/v-preview-image)
+
+
+#### [该版本为vue3版本，vue2版本请查看2.x分支文档](https://github.com/zhangchuqiang/v-preview-image/tree/2.x)
+
 
 ## npm安装
 ```bash
