@@ -165,8 +165,8 @@ export default {
         this.handleScale('reduce')
       }
     },
-    // 缩放 add:加 reduce:减
-    handleScale() {
+    // 缩放 type = add:加 reduce:减
+    handleScale(type) {
       if (type === 'add' && this.imgScale < 4) {
         this.imgScale += 0.1
       } else if (type === 'reduce' && this.imgScale > 0.5) {

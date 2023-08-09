@@ -11,10 +11,12 @@
 
 如果对您有帮助，麻烦给个 Star！
 
-[github]: https://github.com/zhangchuqiang/v-preview-image/tree/2.x
 
-### 该版本为vue2版本，vue3版本请查看master分支文档
-[github]: https://github.com/zhangchuqiang/v-preview-image
+[github](https://github.com/zhangchuqiang/v-preview-image/tree/2.x)
+
+
+### [该版本为vue2版本，vue3版本请查看master分支文档](https://github.com/zhangchuqiang/v-preview-image)
+
 
 ## npm 安装
 
