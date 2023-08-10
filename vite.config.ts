@@ -26,7 +26,7 @@ export default defineConfig({
       fileName: 'v-preview-image'
     }, 
     rollupOptions: {
-      input: resolvePath('example/main.ts'),
+      input: resolvePath('./src/index.ts'),
       external: ['vue'],
       output: {
         globals: {
