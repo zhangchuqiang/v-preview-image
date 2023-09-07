@@ -21,7 +21,7 @@
 ## npm 安装
 
 ```bash
-npm install v-preview-image@^2.0.0 -S
+npm install v-preview-image@^2.x -S
 ```
 
 ## 在 main.js 引入
