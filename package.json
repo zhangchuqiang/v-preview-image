@@ -1,7 +1,7 @@
 {
   "name": "v-preview-image",
   "private": false,
-  "version": "3.0.7",
+  "version": "3.0.8",
   "desription": "基于vue2/vue3的图片预览插件",
   "keywords": [
     "vue",
