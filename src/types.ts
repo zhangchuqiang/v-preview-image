@@ -1,3 +1,5 @@
+import { CSSProperties } from 'vue'
+
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $preview: (current?: string | number, list?: any[], key?: string) => void
@@ -12,7 +14,7 @@ export interface DefaultOptions {
    * 开启点击遮罩关闭
    * 默认true
    */
-  enabledMaskClose: boolean 
+  enabledMaskClose: boolean
 
   /**
    * 开启esc按键关闭
@@ -30,7 +32,12 @@ export interface DefaultOptions {
    * 预览图中选中图片的背景颜色
    * 默认rgba(239, 84, 78, 0.7)
    */
-  activeColor: string // 
+  activeColor: string
+
+  /**
+   * 预览图的样式 可设置宽高
+   */
+  previewStyle: CSSProperties
 }
 
 /**
