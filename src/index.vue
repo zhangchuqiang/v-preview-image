@@ -4,7 +4,7 @@
       <img
         class="preview-content"
         :src="currentImg"
-        :style="{ top: imgTop + 'px', left: imgLeft + 'px', transform: `scale(${imgScale}) rotateZ(${imgRotate}deg)` }"
+        :style="{ top: imgTop + 'px', left: imgLeft + 'px', transform: `scale(${imgScale}) rotateZ(${imgRotate}deg)`, ...defaultOptions.previewStyle }"
         @click.stop="preventDefault"
         @mousedown="handleMoveStart"
       />
@@ -46,7 +46,12 @@ export default {
         enabledMaskClose: true, // 开启点击遮罩关闭
         enabledEscClose: true, // 开启esc按键关闭
         enabledMouseZoom: true, // 开启鼠标滚轮缩放
-        activeColor: 'rgba(239, 84, 78, 0.7)' // 预览图中选中图片的背景颜色
+        activeColor: 'rgba(239, 84, 78, 0.7)', // 预览图中选中图片的背景颜色
+        previewStyle: {
+          width: 'auto',
+          height: 'auto',
+          objectFit: 'cover'
+        } // 预览图样式
       }, // 默认配置
       show: false, // 是否显示预览
       currentImg: '', // 当前预览图片的url
