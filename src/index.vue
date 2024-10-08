@@ -323,20 +323,18 @@ defineExpose({
   }
 }
 .icon-btn {
-  padding: 10px;
+  padding: 8px;
   border-radius: 50%;
   background: rgba(110, 110, 110, 0.7);
-  &:active {
-    filter: brightness(0.8);
-  }
+  
   &:hover {
-    filter: brightness(1.2);
+    filter: brightness(1.3);
   }
   cursor: pointer;
   > img {
     display: block;
-    width: 30px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
   }
 }
 </style>
