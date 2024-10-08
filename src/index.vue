@@ -64,10 +64,12 @@ const handleCut = (type: 'last' | 'next') => {
 }
 // 使滚动条滚动到当前预览的那一张
 const handleXScroll = (index: number) => {
-  index = index < 4 ? 0 : index - 4
   const imgParentElement = document.querySelector('.preview-footer-thumbs') as HTMLElement
   const imgWrapElement = document.querySelector('#thumb-item-' + index) as HTMLElement
-  imgParentElement.scrollLeft = imgWrapElement?.offsetLeft || 0
+  imgParentElement.scrollTo({
+    left: imgWrapElement?.offsetLeft - (imgParentElement.offsetWidth - imgWrapElement.offsetWidth) / 2,
+    behavior: 'smooth'
+  })
 }
 // 点击缩略图切换当前预览
 const handleClickThumb = (item: any, index: number) => {
