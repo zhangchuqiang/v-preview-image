@@ -66,7 +66,8 @@ setPreviewDefaultOptions({
   enabledEscClose: false, // 是否开启esc按键关闭(默认为true)
   enabledMouseZoom: false, // 是否开启鼠标滚轮缩放(默认为true)
   activeColor: 'green' // 预览图中选中图片的背景颜色(默认为rgba(239, 84, 78, 0.7))
-  previewStyle: { width: 'auto',height: 'auto',objectFit: 'cover'} // 预览图样式
+  previewStyle: { width: 'auto',height: 'auto',objectFit: 'cover'}, // 预览图样式
+  showDownloadBtn: false // 显示下载按钮
 })
 
 // 方式二：在app.use时传入配置

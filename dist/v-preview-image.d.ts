@@ -1,4 +1,5 @@
 import { App } from 'vue';
+import { CSSProperties } from 'vue';
 
 /**
  * 关闭预览
@@ -29,6 +30,14 @@ declare interface DefaultOptions {
      * 默认rgba(239, 84, 78, 0.7)
      */
     activeColor: string;
+    /**
+     * 预览图的样式 可设置宽高
+     */
+    previewStyle: CSSProperties;
+    /**
+     * 显示下载按钮
+     */
+    showDownloadBtn: boolean;
 }
 
 /**
