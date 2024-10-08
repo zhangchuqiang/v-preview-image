@@ -10,35 +10,42 @@
       />
       <div class="preview-footer" @click.stop="preventDefault">
         <ul class="preview-footer-tools">
-          <li v-if="imgList.length" @click="handleCut('last')"><img src="./assets/arrow-left.png" /></li>
-          <li @click="handleRotate('left')"><img src="./assets/refresh-left.png" /></li>
-          <li @click="handleScale('reduce')"><img src="./assets/reduce.png" /></li>
-          <li @click="imgScale = 1"><img src="./assets/real-size.png" /></li>
-          <li @click="handleScale('add')"><img src="./assets/add.png" /></li>
-          <li @click="handleRotate('right')"><img src="./assets/refresh-right.png" /></li>
-          <li v-if="imgList.length" @click="handleCut('next')"><img src="./assets/arrow-right.png" /></li>
+          <li class="icon-btn" v-if="imgList.length" @click="handleCut('last')"><img src="./assets/arrow-left.png" /></li>
+          <li class="icon-btn" @click="handleRotate('left')"><img src="./assets/refresh-left.png" /></li>
+          <li class="icon-btn" @click="handleScale('reduce')"><img src="./assets/reduce.png" /></li>
+          <li class="icon-btn" @click="imgScale = 1"><img src="./assets/real-size.png" /></li>
+          <li class="icon-btn" @click="handleScale('add')"><img src="./assets/add.png" /></li>
+          <li class="icon-btn" @click="handleRotate('right')"><img src="./assets/refresh-right.png" /></li>
+          <li class="icon-btn" v-if="imgList.length" @click="handleCut('next')"><img src="./assets/arrow-right.png" /></li>
         </ul>
-        <div class="preview-footer-thumbs" v-if="imgList.length">
-          <div
-            v-for="(item, index) in imgList"
-            :id="'thumb-item-' + index"
-            :key="index"
-            class="thumb-item"
-            :style="{ background: currentIndex === index ? defaultOptions.activeColor : '' }"
-            @click="handleClickThumb(item, index)"
-          >
-            <img :src="imgKey ? item[imgKey] : item" />
+        <template v-if="imgList.length">
+          <div class="preview-footer-thumbs">
+            <div
+              v-for="(item, index) in imgList"
+              :id="'thumb-item-' + index"
+              :key="index"
+              class="thumb-item"
+              :style="{ background: currentIndex === index ? defaultOptions.activeColor : '' }"
+              @click="handleClickThumb(item, index)"
+            >
+              <img :src="imgKey ? item[imgKey] : item" />
+            </div>
           </div>
-        </div>
+          <div class="preview-footer-indexs">{{ currentIndex + 1 }} / {{ imgList.length }}</div>
+        </template>
       </div>
-      <span class="close-icon" @click="show = false">
+      <span class="close-btn icon-btn" @click="show = false">
         <img src="./assets/close.png" />
+      </span>
+      <span v-if="defaultOptions.showDownloadBtn" class="download-btn icon-btn" @click.stop="downloadFile(currentImg)">
+        <img src="./assets/download.png" />
       </span>
     </div>
   </div>
 </template>
 
 <script>
+import { downloadFile } from './util'
 export default {
   data() {
     return {
@@ -51,7 +58,8 @@ export default {
           width: 'auto',
           height: 'auto',
           objectFit: 'cover'
-        } // 预览图样式
+        }, // 预览图样式
+        showDownloadBtn: true // 显示下载按钮
       }, // 默认配置
       show: false, // 是否显示预览
       currentImg: '', // 当前预览图片的url
@@ -141,10 +149,12 @@ export default {
     },
     // 使滚动条滚动到当前预览的那一张
     handleXScroll(index) {
-      index = index < 4 ? 0 : index - 4
       const imgParentElement = document.querySelector('.preview-footer-thumbs')
       const imgWrapElement = document.querySelector('#thumb-item-' + index)
-      imgParentElement.scrollLeft = imgWrapElement.offsetLeft
+      imgParentElement.scrollTo({
+        left: imgWrapElement?.offsetLeft - (imgParentElement.offsetWidth - imgWrapElement.offsetWidth) / 2,
+        behavior: 'smooth'
+      })
     },
     // 点击缩略图切换当前预览
     handleClickThumb(item, index) {
@@ -207,7 +217,8 @@ export default {
     // 阻止默认行为
     preventDefault(e) {
       e.preventDefault()
-    }
+    },
+    downloadFile
   }
 }
 </script>
@@ -243,38 +254,21 @@ export default {
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       &-tools {
         display: flex;
         justify-content: center;
 
         li {
           margin-right: 10px;
-          padding: 10px;
-          border-radius: 50%;
-          background: rgba(110, 110, 110, 0.7);
-          &:active {
-            filter: brightness(0.8);
-          }
-          &:hover {
-            filter: brightness(1.2);
-          }
-          cursor: pointer;
-          > img {
-            display: block;
-            width: 30px;
-            height: 30px;
-          }
-          &:hover {
-            i {
-              color: #ef544e;
-            }
-          }
         }
       }
 
       &-thumbs {
-        margin-top: 20px;
         max-width: 700px;
+        padding-bottom: 10px;
         overflow-x: auto;
         white-space: nowrap;
 
@@ -297,37 +291,54 @@ export default {
 
         &::-webkit-scrollbar-thumb {
           border-radius: 10px;
-          -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-          background: #d2d2d2;
+          -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+          background: #aaa;
           cursor: pointer;
         }
 
         &::-webkit-scrollbar-track {
           border-radius: 10px;
-          background: #fff;
+          background: rgba(255, 255, 255, 0.8);
         }
       }
+
+      &-indexs {
+        margin-top: 10px;
+        height: 25px;
+        line-height: 25px;
+        padding: 0 12px;
+        background: rgba(0, 0, 0, 0.3);
+        color: #fff;
+        text-align: center;
+        border-radius: 13px;
+        font-size: 14px;
+      }
     }
-    .close-icon {
-      padding: 10px;
+    .close-btn {
       position: absolute;
       top: 30px;
       right: 30px;
-      border-radius: 50%;
-      background: rgba(110, 110, 110, 0.7);
-      cursor: pointer;
-      > img {
-        display: block;
-        width: 30px;
-        height: 30px;
-      }
-      &:active {
-        filter: brightness(0.8);
-      }
-      &:hover {
-        filter: brightness(1.2);
-      }
     }
+    .download-btn {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+    }
+  }
+}
+.icon-btn {
+  padding: 8px;
+  border-radius: 50%;
+  background: rgba(110, 110, 110, 0.7);
+
+  &:hover {
+    filter: brightness(1.3);
+  }
+  cursor: pointer;
+  > img {
+    display: block;
+    width: 25px;
+    height: 25px;
   }
 }
 </style>
