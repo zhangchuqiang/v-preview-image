@@ -38,6 +38,11 @@ export interface DefaultOptions {
    * 预览图的样式 可设置宽高
    */
   previewStyle: CSSProperties
+
+  /**
+   * 显示下载按钮
+   */
+  showDownloadBtn: boolean
 }
 
 /**
